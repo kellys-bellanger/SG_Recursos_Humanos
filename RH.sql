@@ -27,3 +27,18 @@ go
 
 create schema Formacion;
 go
+create table Organizacion.Departamentos (
+    nDepartamentoID int identity(1,1) primary key,
+    cNombreDepartamento nvarchar(100) not null unique,
+    cDescripcion nvarchar(255),
+    cUbicacion nvarchar(150),
+    cEstado nvarchar(20) not null,
+
+    created_at datetime default getdate(),
+    updated_at datetime,
+    deleted_at datetime,
+
+    constraint CK_Departamentos_Estado 
+    check (cEstado in ('Activo', 'Inactivo'))
+);
+go
