@@ -145,3 +145,79 @@ create table Controles.Asistencia (
     foreign key (nEmpleadoID) references Personal.Empleados(nEmpleadoID)
 );
 go
+create table Desempeno.Evaluaciones (
+    id_evaluacion int identity(1,1) primary key,
+    fecha_evaluacion date not null,
+    periodo_evaluado varchar(50) not null,
+    calificacion_obtenida int not null,
+    comentarios varchar(500),
+
+    id_empleado int not null,
+
+    created_at datetime not null default getdate(),
+    updated_at datetime,
+    deleted_at datetime,
+
+    constraint CK_Evaluaciones_Calificacion
+    check (calificacion_obtenida between 1 and 100),
+
+    constraint FK_Evaluaciones_Empleados
+    foreign key (id_empleado)
+    references Personal.Empleados(nEmpleadoID)
+);
+go
+
+/* =========================================================
+   7. TABLA CAPACITACIONES
+   Schema: Formacion
+   ========================================================= */
+
+create table Formacion.Capacitaciones (
+    id_capacitacion int identity(1,1) primary key,
+    codigo_capacitacion varchar(10) not null,
+    nombre_capacitacion varchar(150) not null,
+    institucion_responsable varchar(150) not null,
+    duracion_horas int not null,
+    fecha_realizacion date not null,
+
+    created_at datetime not null default getdate(),
+    updated_at datetime,
+    deleted_at datetime,
+
+    constraint UQ_Capacitaciones_Codigo unique (codigo_capacitacion),
+
+    constraint CK_Capacitaciones_Duracion
+    check (duracion_horas > 0)
+);
+go
+
+/* =========================================================
+   8. TABLA INTERMEDIA EMPLEADO_CAPACITACION
+   Relación muchos a muchos:
+   Un empleado puede tener muchas capacitaciones.
+   Una capacitación puede ser recibida por muchos empleados.
+   Schema: Formacion
+   ========================================================= */
+
+create table Formacion.EmpleadoCapacitacion (
+    id_empleado int not null,
+    id_capacitacion int not null,
+    fecha_participacion date not null,
+    resultado_obtenido varchar(50),
+
+    created_at datetime not null default getdate(),
+    updated_at datetime,
+    deleted_at datetime,
+
+    constraint PK_EmpleadoCapacitacion
+    primary key (id_empleado, id_capacitacion),
+
+    constraint FK_EmpleadoCapacitacion_Empleados
+    foreign key (id_empleado)
+    references Personal.Empleados(nEmpleadoID),
+
+    constraint FK_EmpleadoCapacitacion_Capacitaciones
+    foreign key (id_capacitacion)
+    references Formacion.Capacitaciones(id_capacitacion)
+);
+go
