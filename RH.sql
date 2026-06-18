@@ -42,3 +42,18 @@ create table Organizacion.Departamentos (
     check (cEstado in ('Activo', 'Inactivo'))
 );
 go
+create table Organizacion.Cargos (
+    nCargoID int identity(1,1) primary key,
+    cNombreCargo nvarchar(100) not null unique,
+    cDescripcion nvarchar(255),
+    nSalarioBase decimal(10,2) not null,
+    cNivelCargo nvarchar(50) not null,
+
+    created_at datetime default getdate(),
+    updated_at datetime,
+    deleted_at datetime,
+
+    constraint CK_Cargos_SalarioBase 
+    check (nSalarioBase > 0)
+);
+go
