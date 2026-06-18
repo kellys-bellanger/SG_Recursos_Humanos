@@ -221,3 +221,57 @@ create table Formacion.EmpleadoCapacitacion (
     references Formacion.Capacitaciones(id_capacitacion)
 );
 go
+
+
+alter table Organizacion.Departamentos
+add constraint DF_Departamentos_Estado default 'Activo' for cEstado;
+go
+
+-- 2. INSERCIÓN DE DATOS DE PRUEBA
+-- Departamentos
+insert into Organizacion.Departamentos (cNombreDepartamento, cDescripcion, cUbicacion, cEstado)
+values 
+('Recursos Humanos', 'Gestión de talento', 'Piso 1, Ala Norte', 'Activo'),
+('Finanzas', 'Contabilidad y presupuestos', 'Piso 2, Ala Sur', 'Activo'),
+('Tecnología', 'Desarrollo de sistemas', 'Piso 3, Edificio B', 'Activo');
+
+-- Cargos
+insert into Organizacion.Cargos (cNombreCargo, cDescripcion, nSalarioBase, cNivelCargo)
+values 
+('Gerente', 'Dirección general de área', 45000.00, 'Gerencial'),
+('Analista de Sistemas', 'Soporte y desarrollo', 25000.00, 'Junior'),
+('Contador', 'Control financiero', 28000.00, 'Senior');
+
+-- Empleados
+insert into Personal.Empleados (cCodigoEmpleado, cNumeroIdentificacion, cNombres, cApellidos, dFechaNacimiento, cSexo, cTelefono, cCorreoElectronico, cDireccion, dFechaContratacion, nDepartamentoID, nCargoID)
+values 
+('EMP001', '001-150898-1002A', 'Carlos', 'Mendoza', '1998-08-15', 'M', '8888-8888', 'carlos.mendoza@empresa.com', 'Managua, Nicaragua', '2025-01-15', 3, 2),
+('EMP002', '001-201090-1005B', 'Ana', 'Gutiérrez', '1990-10-20', 'F', '7777-7777', 'ana.gutierrez@empresa.com', 'Masaya, Nicaragua', '2024-06-01', 1, 1);
+
+-- Contratos
+insert into Laboral.Contratos (cCodigoContrato, cTipoContrato, dFechaInicio, dFechaFinalizacion, nSalarioAcordado, nEmpleadoID)
+values 
+('CON-001', 'Permanente', '2025-01-15', null, 25000.00, 1),
+('CON-002', 'Por proyecto', '2024-06-01', '2026-06-01', 45000.00, 2);
+
+-- Asistencia
+insert into Controles.Asistencia (dFecha, tHoraEntrada, tHoraSalida, cEstadoAsistencia, nEmpleadoID)
+values 
+(cast(getdate() as date), '08:00:00', '17:00:00', 'Presente', 1),
+(cast(getdate() as date), '08:15:00', null, 'Presente', 2);
+
+-- Evaluaciones
+insert into Desempeno.Evaluaciones (fecha_evaluacion, periodo_evaluado, calificacion_obtenida, comentarios, id_empleado)
+values 
+('2025-12-15', 'Evaluación Anual 2025', 92, 'Excelente desempeño en el desarrollo de módulos.', 1);
+
+-- Capacitaciones
+insert into Formacion.Capacitaciones (codigo_capacitacion, nombre_capacitacion, institucion_responsable, duracion_horas, fecha_realizacion)
+values 
+('CAP-SQL', 'Optimización de Bases de Datos SQL Server', 'Sistemas Avanzados S.A.', 40, '2026-02-10');
+
+-- EmpleadoCapacitacion (Intermedia)
+insert into Formacion.EmpleadoCapacitacion (id_empleado, id_capacitacion, fecha_participacion, resultado_obtenido)
+values 
+(1, 1, '2026-02-10', 'Aprobado con Excelencia');
+go
