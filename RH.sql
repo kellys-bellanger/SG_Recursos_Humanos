@@ -275,3 +275,22 @@ insert into Formacion.EmpleadoCapacitacion (id_empleado, id_capacitacion, fecha_
 values 
 (1, 1, '2026-02-10', 'Aprobado con Excelencia');
 go
+
+-- Registrar Empleado
+insert into Personal.Empleados (cCodigoEmpleado, cNumeroIdentificacion, cNombres, cApellidos, dFechaNacimiento, cSexo, cTelefono, cCorreoElectronico, cDireccion, dFechaContratacion, nDepartamentoID, nCargoID)
+values ('EMP003', '001-050595-1009K', 'María', 'López', '1995-05-05', 'F', '5555-5555', 'maria.lopez@empresa.com', 'Granada', '2026-03-01', 2, 3);
+
+-- Consultar General de Empleados con sus datos de Cargo y Departamento
+select E.cCodigoEmpleado, E.cNombres, E.cApellidos, D.cNombreDepartamento, C.cNombreCargo, E.cEstadoLaboral
+from Personal.Empleados E
+inner join Organizacion.Departamentos D on E.nDepartamentoID = D.nDepartamentoID
+inner join Organizacion.Cargos C on E.nCargoID = C.nCargoID;
+
+-- Actualizar Información del Empleado
+update Personal.Empleados
+set cTelefono = '8444-4444', cDireccion = 'Managua, Sector Altamira', updated_at = getdate()
+where cCodigoEmpleado = 'EMP003';
+
+-- Eliminar Empleado (Ejemplo de Soft Delete o borrado físico controlado)
+delete from Personal.Empleados 
+where cCodigoEmpleado = 'EMP003';
